@@ -1,8 +1,10 @@
 from pathlib import Path
+import sys
 
 from flask import Flask, jsonify, request
 
-from api import util
+sys.path.append(str(Path(__file__).resolve().parent))
+import util
 
 app = Flask(__name__)
 util.load_saved_artifacts()
