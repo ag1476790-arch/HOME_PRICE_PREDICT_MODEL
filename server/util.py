@@ -1,9 +1,11 @@
 import json
 import pickle
 import numpy as np
+from pathlib import Path
 __location=None
 __data_column=None
 __model=None
+
 
 def get_estimated_price(location,sqft,bhk,bath):
     try:
@@ -20,19 +22,23 @@ def get_estimated_price(location,sqft,bhk,bath):
         x[loc_index] = 1
     return round(__model.predict([x])[0],2)
 
+
 def get_location_names():
     return __location
+
 def load_saved_artifacts():
     print("loading saved artifacts")
     global __location
     global __data_column
 
-    with open("./Artifact/columns.json", "r") as f:
-        __data_column=json.load(f)['data_columns']
-        __location=__data_column[3:]
+    artifact_dir = Path(__file__).resolve().parent / "Artifact"
+    with open(artifact_dir / "columns.json", "r") as f:
+        __data_column = json.load(f)["data_columns"]
+        __location = __data_column[3:]
+
     global __model
-    with open("./Artifact/Bengaluru_Home_Prices_Model.pickle",'rb') as f:
-        __model= pickle.load(f)
+    with open(artifact_dir / "Bengaluru_Home_Prices_Model.pickle", "rb") as f:
+        __model = pickle.load(f)
 
 if __name__ == '__main__':
     load_saved_artifacts()
